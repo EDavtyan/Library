@@ -15,14 +15,13 @@ class AuthService {
         if(user.password === EncryptionHelper.encrypt(password)) {
             let userPermissions = this.permissionService.getPermissions(user.role);
 
-            sessionStorage.setItem('authInfo', {
+            sessionStorage.setItem('authInfo', JSON.stringify({
                 user: user,
                 permissions: userPermissions
-            })
+            }));
         } else {
             throw new Error(`incorrect username or password`);
         }
-
         return user;
     }
 
@@ -32,5 +31,10 @@ class AuthService {
 
     isLogined() {
         return sessionStorage.getItem('authInfo') != null;
+    }
+
+    signUp(username, password) { // TODO needs to be changed
+        password = EncryptionHelper.encrypt(password);
+        this.umService.setUser(username, password);
     }
 }
